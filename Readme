@@ -1,0 +1,63 @@
+# Field Ops 📐
+
+A field-math trainer for MTSU's **Commercial Construction Management** concentration. Sixteen modules, each tied to a real course in the degree, built on the Army Experiential Learning Model (ELM) with GO/NO-GO standards and after action reviews.
+
+**Live:** https://jsmokeyscott-pixel.github.io/cm-field-ops/
+
+No install, no accounts, no server. It's a static page, so it runs anywhere you can open an HTML file. Progress and notes save in the learner's own browser.
+
+## Modules by course
+
+| Course | Modules |
+|---|---|
+| CCM 2060 / CMT 2100 | Reading scale off a drawing, area and volume takeoff, 3-4-5 squaring |
+| CMT 3100 / CMT 4200 | Unit-cost estimating, overhead/profit/markup, labor productivity and crew cost |
+| CMT 4120 | Activity duration, critical path and float |
+| CMT 3000 | Water-cement ratio, concrete yield, rebar sizing and weight, masonry coursing |
+| CMT 2320 / CCM 2200 | Compaction and Proctor density, OSHA excavation slope ratios |
+| CMT 4320 / CMT 4280 | BIM and Level of Development, progress billing and retainage |
+
+Course numbers and sequencing follow the MTSU 2026–27 Commercial Construction Management academic map.
+
+## Interactive models
+
+Several modules include a live calculator the learner drags and taps:
+
+- **Slab takeoff** — length, width, thickness and waste sliders drive a scaled plan view and cubic-yard order
+- **Rebar table** — pick a bar size (#3–#9) and length; get diameter, area, weight and tons
+- **Water-cement** — a strength bar shifts as water is added
+- **Compaction gauge** — the strip turns green and reads PASS when field density crosses 95% of Proctor
+- plus scale, unit-cost, and productivity calculators
+
+## How each module runs (ELM)
+
+1. **Run it cold** — a field scenario attempted before any instruction
+2. **Reflect** — the learner sees the answer and writes what happened
+3. **The method** — the rule, a worked example, and the interactive model
+4. **Connect it** — where the learner will use it, in their own words
+5. **Train to GO** — generated problems that step up through three difficulty levels
+
+**Standard:** a module is GO at 4 of the last 5, with at least 5 attempts. Showing a solution counts as a NO-GO. Reaching GO prompts a four-question after action review that saves to the field log.
+
+## Run it locally
+
+Open `index.html` in a browser. That's it. For a local server instead:
+
+```bash
+npx serve .
+```
+
+## Deploy to GitHub Pages
+
+1. Create a public repo named `cm-field-ops`.
+2. Upload `index.html` and `README.md`.
+3. In the repo, go to **Settings → Pages**. Set **Source: Deploy from a branch**, **Branch: main**, **Folder: / (root)**, then save.
+4. In a minute or two the site is live at `https://<your-username>.github.io/cm-field-ops/`.
+
+## Adding or editing a module
+
+Each module lives in the `PHASES` list inside `index.html`. A module has: `course`, `title`, `bloom`, `hint`, `ce` (the cold scenario and its item), `gni` (the method, as HTML), `dev`, an optional `model` (one of the interactive models), and `gen(level)`. The `gen(level)` function returns a problem at difficulty 1 to 3. Answer types: `num`, `choice`, `fields`, `text`.
+
+## Honest note on numbers
+
+The engineering values (rebar unit weights, Proctor relationships, OSHA 1926 Subpart P slope ratios, water-cement behavior) are standard industry references and are solid for teaching. Verify against the current ACI, OSHA, and project specifications before using them on a real job.
