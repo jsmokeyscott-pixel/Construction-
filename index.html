@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Field Ops · Commercial CM</title>
+<meta name="description" content="Field-math trainer for MTSU Commercial Construction Management: takeoff, estimating, scheduling, concrete, structural materials, soils, BIM. Built on the Experiential Learning Model.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📐</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eceef0;--surface:#ffffff;--surface2:#f1f3f5;--ink:#15232e;--muted:#5a6b78;--line:#cfd6dc;
+  --accent:#1f4e79;--accent2:#2f6aa8;--accent-soft:#dde8f2;--accent-ink:#ffffff;
+  --orange:#e8691b;--orange-soft:#fbe4d1;
+  --go:#1f7a4d;--go-soft:#d6ecdf;--nogo:#b23024;--nogo-soft:#f6dcd8;--grid:#d7dde2;
+  --fill-slab:#cfe0f0;
+  --fd:'Oswald','Arial Narrow',sans-serif;--fb:'Archivo',system-ui,sans-serif;--fm:'Spline Sans Mono',ui-monospace,monospace;
+  color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1720;--surface:#17212c;--surface2:#1f2b38;--ink:#e4ebf1;--muted:#93a3b1;--line:#2c3b49;
+  --accent:#4f8fce;--accent2:#6aa6e0;--accent-soft:#1d2d3e;--accent-ink:#0f1720;
+  --orange:#f0893f;--orange-soft:#3a2415;--go:#56c088;--go-soft:#17301f;--nogo:#ef8278;--nogo-soft:#361b18;--grid:#243341;
+  --fill-slab:#20374d;color-scheme:dark;}}
+:root[data-theme="dark"]{--bg:#0f1720;--surface:#17212c;--surface2:#1f2b38;--ink:#e4ebf1;--muted:#93a3b1;--line:#2c3b49;--accent:#4f8fce;--accent2:#6aa6e0;--accent-soft:#1d2d3e;--accent-ink:#0f1720;--orange:#f0893f;--orange-soft:#3a2415;--go:#56c088;--go-soft:#17301f;--nogo:#ef8278;--nogo-soft:#361b18;--grid:#243341;--fill-slab:#20374d;color-scheme:dark;}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0) + 64px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.55 var(--fb);background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;background-position:-1px -1px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0);z-index:30;background:var(--accent)}
+header.top{position:sticky;top:env(safe-area-inset-top,0);z-index:20;background:var(--accent);color:#fff}
+.topin{max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:9px 16px}
+.brand{font:700 20px var(--fd);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:none;border:0;cursor:pointer;display:flex;align-items:center;gap:8px}
+.brand::before{content:"";width:13px;height:13px;background:var(--orange);display:inline-block;transform:rotate(45deg)}
+nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{font:600 14px var(--fb);color:#c7d7e6;background:none;border:0;border-bottom:3px solid transparent;padding:6px 11px;cursor:pointer;white-space:nowrap}
+nav button[aria-current="page"]{color:#fff;border-bottom-color:var(--orange)}
+nav button:hover{color:#fff}
+main{max-width:1060px;margin:0 auto;padding:22px 16px 72px}
+h1,h2,h3{font-family:var(--fd);font-weight:600;line-height:1.08;margin:0 0 .4em;letter-spacing:.01em}
+h2{font-size:26px;text-transform:uppercase;letter-spacing:.04em}h3{font-size:19px;margin-top:1.1em;text-transform:uppercase;letter-spacing:.03em}
+.mono{font-family:var(--fm)}.small{font-size:13px}.dim{color:var(--muted)}
+code{font-family:var(--fm);font-size:.9em;background:var(--surface2);padding:1px 5px;border-radius:3px}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.hero{padding:16px 0 6px}
+.herotag{color:var(--accent2);font-size:12px;letter-spacing:.04em;margin-bottom:8px}
+.display{font-family:var(--fd);font-weight:700;font-size:clamp(56px,13vw,120px);line-height:.9;text-transform:uppercase;letter-spacing:.02em;margin:0 0 12px;color:var(--accent)}
+.display::after{content:"";display:block;width:84px;height:7px;background:var(--orange);margin-top:10px}
+.lead{max-width:64ch;font-size:17px;margin:0 0 16px}
+.progress{display:flex;align-items:center;gap:12px;margin:4px 0 18px;max-width:560px}
+.bar{flex:1;height:10px;background:var(--surface2);border:1px solid var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--orange)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.row.end{justify-content:flex-end}.row.between{justify-content:space-between}
+.btn{font:600 15px var(--fb);padding:10px 16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-height:44px;border-radius:2px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent2)}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:default}
+.link{background:none;border:0;color:var(--accent2);font:600 14px var(--fb);padding:6px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.callout{background:var(--orange-soft);border-left:4px solid var(--orange);padding:10px 14px;margin:14px 0;max-width:72ch}
+.callout.okc{background:var(--go-soft);border-left-color:var(--go)}
+.phase{margin-top:26px}
+.phead{display:flex;align-items:center;gap:14px;border-bottom:2px solid var(--accent);padding-bottom:6px;margin-bottom:0}
+.roman{font:700 30px var(--fd);color:var(--orange);min-width:1.6ch}
+.phead h2{margin:0;font-size:22px}
+.pcourse{color:var(--muted)}
+.pcount{margin-left:auto;color:var(--muted)}
+.log{display:flex;flex-direction:column}
+.logrow{display:grid;grid-template-columns:52px 96px 1fr auto auto;gap:12px;align-items:center;text-align:left;background:var(--surface);border:0;border-bottom:1px solid var(--line);border-left:4px solid var(--line);padding:12px 14px;cursor:pointer;color:var(--ink);font:inherit}
+.logrow:hover{background:var(--surface2)}
+.logrow.prog{border-left-color:var(--orange)}.logrow.go{border-left-color:var(--go)}
+.lnum{color:var(--muted);font-size:13px}
+.lcourse{color:var(--accent2);font-size:12px}
+.logrow .ltitle{font-weight:600}
+.lbloom{font-size:12px;color:var(--muted)}
+.chip{font:600 11px var(--fb);padding:4px 8px;background:var(--surface2);color:var(--muted);white-space:nowrap;border-radius:2px;letter-spacing:.02em}
+.chip.go{background:var(--go-soft);color:var(--go)}.chip.prog{background:var(--orange-soft);color:var(--orange)}
+.chip.course{background:var(--accent-soft);color:var(--accent2);font-family:var(--fm)}
+@media (max-width:680px){.logrow{grid-template-columns:44px 1fr auto;row-gap:2px}.lcourse{grid-column:2}.logrow .ltitle{grid-column:2}.lbloom{display:none}.lnum{grid-row:span 2}}
+.lhead{margin-bottom:4px}.lmeta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0}
+.ltitle2{font-size:clamp(28px,5vw,42px);text-transform:uppercase}
+.stepper{display:flex;gap:6px;margin:12px 0;overflow-x:auto;scrollbar-width:none}
+.stepper::-webkit-scrollbar{display:none}
+.stepper button{flex:1 0 auto;display:flex;gap:8px;align-items:center;text-align:left;background:var(--surface);border:1.5px solid var(--line);padding:8px 11px;cursor:pointer;color:var(--ink);font:inherit;min-height:52px;border-radius:2px}
+.stepper button[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 -4px 0 var(--orange)}
+.stepper .ck{flex:0 0 24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font:600 13px var(--fm)}
+.stepper button.done .ck{background:var(--go);border-color:var(--go);color:#fff}
+.stepper .st{display:flex;flex-direction:column}.stepper b{font:600 14px var(--fb)}.stepper small{color:var(--muted);font-size:11px}
+.panel{background:var(--surface);border:1.5px solid var(--line);padding:20px;margin-bottom:14px;border-radius:2px}
+@media (max-width:520px){.panel{padding:14px}}
+.note{color:var(--muted);max-width:68ch;margin-top:0}
+.scenario{font-size:18px;max-width:64ch;border-left:4px solid var(--accent);padding-left:14px}
+.item{margin-top:14px}.item .q{font-size:19px;margin-bottom:12px;line-height:1.5}
+input[type=text],textarea{width:100%;font:17px var(--fm);padding:11px 12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:2px}
+input[type=text]:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+input:disabled{opacity:.75}
+textarea{font:16px/1.5 var(--fb);resize:vertical}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.field{display:block;margin:8px 0}.field>span{display:block;font-size:14px;color:var(--muted);margin-bottom:4px}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:260px;margin:10px 0}
+.keys button{font:16px var(--fm);min-height:40px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);cursor:pointer;border-radius:2px}
+.keys button.wide{grid-column:span 3}
+.choices{display:grid;gap:8px}
+.choices button{text-align:left;font:16px var(--fb);padding:12px 14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;border-radius:2px}
+.choices button.right{border-color:var(--go);background:var(--go-soft)}.choices button.wrong{border-color:var(--nogo);background:var(--nogo-soft)}
+.fb:empty{display:none}
+.fb{margin-top:14px;padding:12px 14px}
+.fb.go{background:var(--go-soft);border-left:5px solid var(--go)}.fb.go strong{color:var(--go)}
+.fb.nogo{background:var(--nogo-soft);border-left:5px solid var(--nogo)}.fb.nogo strong{color:var(--nogo)}
+.fb.err{background:var(--orange-soft);border-left:5px solid var(--orange)}
+.fb strong{font:700 17px var(--fd);letter-spacing:.03em}
+.sol{margin-top:6px}
+.gni{max-width:72ch}
+.gni .rule{border-left:4px solid var(--accent);background:var(--accent-soft);padding:10px 14px;margin:12px 0;line-height:1.7}
+.gni .ex{font-family:var(--fm);font-size:15px;background:var(--surface2);padding:12px 14px;margin:12px 0;line-height:1.7;overflow-x:auto;border-left:3px solid var(--orange)}
+.why{font-size:18px;max-width:64ch}
+.prompts{color:var(--muted);padding-left:20px}
+/* models */
+.model{border:1.5px solid var(--line);background:var(--surface2);padding:16px;margin:10px 0;border-radius:2px}
+.mhint{color:var(--muted);font-size:14px;margin:0 0 12px}
+.msl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px 18px;margin:6px 0 14px}
+.ms{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:2px 10px;align-items:center}
+.ms>span{font-size:13px;color:var(--muted)}
+.ms>output{justify-self:end;font-size:14px;font-weight:500;color:var(--accent2)}
+.ms>input{grid-column:span 2;accent-color:var(--accent);min-height:28px}
+.ro{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.rorow{display:flex;justify-content:space-between;gap:12px;background:var(--surface);padding:8px 12px}
+.rok{color:var(--muted);font-size:14px}.rov{font-weight:600;font-size:15px}
+.mviz svg{display:block;margin:0 auto 10px}
+.dim-t{fill:var(--muted);font-size:9px;font-family:var(--fm)}
+.wcwrap{margin:4px 0 12px}
+.wcbar{height:26px;border:1.5px solid var(--line);background:linear-gradient(90deg,var(--nogo-soft),var(--go-soft));position:relative}
+.wcbar::after{content:"";position:absolute;top:-4px;bottom:-4px;left:var(--p);width:3px;background:var(--ink)}
+.barsel{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.barbtn{font:600 15px var(--fm);min-width:44px;min-height:40px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;border-radius:2px}
+.barbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.gwrap{position:relative;margin:4px 0 16px}
+.gauge{height:26px;border:1.5px solid var(--line);background:var(--surface);position:relative;overflow:hidden}
+.gauge::after{content:"";position:absolute;inset:0;width:var(--v);background:var(--orange);transition:width .1s}
+.gauge.pass::after{background:var(--go)}
+.gmark{position:absolute;top:-2px;bottom:-2px;border-left:2px dashed var(--ink);font:600 11px var(--fm);padding-left:3px;color:var(--ink)}
+.stat{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.dots{display:flex;gap:6px}.dot{width:16px;height:16px;border:2px solid var(--line);background:transparent}
+.dot.g{background:var(--go);border-color:var(--go)}.dot.n{background:var(--nogo);border-color:var(--nogo)}
+.hint{background:var(--orange-soft);padding:10px 14px;margin-top:10px}
+.banner{background:var(--go-soft);border:2px solid var(--go);padding:14px;margin-top:18px}
+.banner strong{font:700 20px var(--fd);color:var(--go);letter-spacing:.03em}
+.aar{margin-top:12px}.lnav{margin-top:6px}
+.ph{font-size:clamp(34px,6vw,52px);text-transform:uppercase}
+.jcard h3{margin-top:0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.jl{font:600 13px var(--fb);color:var(--muted);margin:12px 0 2px;text-transform:uppercase;letter-spacing:.03em}
+.jt{margin:0;white-space:pre-wrap}.copybox{margin-top:10px;min-height:180px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin">
+  <button class="brand" onclick="go('home')">Field Ops</button>
+  <nav aria-label="Main">
+    <button data-v="home">Modules</button>
+    <button data-v="journal">Field log</button>
+    <button data-v="method">Method</button>
+  </nav>
+</div></header>
+<main id="app"></main>
+<script>
+/* ===== helpers ===== */
+const ri=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const rf=(a,b,s=1)=>Math.round((a+Math.random()*(b-a))/s)*s;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const r0=v=>Math.round(v);
+const r1=v=>Math.round(v*10)/10;
+const r2=v=>Math.round(v*100)/100;
+const money=v=>'$'+Math.round(v).toLocaleString('en-US');
+const money2=v=>'$'+(Math.round(v*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const commas=v=>Math.round(v).toLocaleString('en-US');
+const pct=v=>r1(v)+'%';
+const clean=s=>String(s).replace(/[,$%]/g,'').replace(/\s+/g,'').replace(/[−–]/g,'-');
+function numVal(s){const t=clean(s);if(!t)throw 'Enter a number first.';if(!/^-?\d*\.?\d+$/.test(t))throw 'Enter a plain number.';const v=parseFloat(t);if(!isFinite(v))throw 'That isn’t a number.';return v;}
+function mc(opts,correct){const arr=opts.map((o,i)=>({o,c:i===correct}));for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return {options:arr.map(a=>a.o),ans:arr.findIndex(a=>a.c)};}
+function close(v,a,tol){return Math.abs(v-a)<=(tol!=null?tol:Math.max(0.01,Math.abs(a)*0.01))+1e-9;}
+function check(item,input){
+  try{
+    if(item.type==='choice')return {ok:input===item.ans};
+    if(item.type==='fields'){const vals=input.map((s,i)=>{if(!String(s).trim())throw 'Fill in every box.';return numVal(s)});const bad=item.fields.filter((f,i)=>!close(vals[i],f.ans,f.tol)).map(f=>f.label);return {ok:!bad.length,msg:bad.length?'Check: '+bad.join(', ')+'.':''};}
+    const raw=String(input).trim();if(!raw)throw 'Enter an answer first.';
+    if(item.type==='num')return {ok:close(numVal(raw),item.ans,item.tol)};
+    if(item.type==='text'){const n=clean(raw).toLowerCase();return {ok:item.accept.some(a=>n===clean(a).toLowerCase())};}
+  }catch(e){return {err:typeof e==='string'?e:'Couldn’t read that.'}}
+  return {err:'Unknown item.'};
+}
+/* rebar: # -> dia(in), area(in^2), weight(plf) */
+const BAR={3:[0.375,0.11,0.376],4:[0.5,0.20,0.668],5:[0.625,0.31,1.043],6:[0.75,0.44,1.502],7:[0.875,0.60,2.044],8:[1.0,0.79,2.670],9:[1.128,1.00,3.400],10:[1.27,1.27,4.303],11:[1.41,1.56,5.313]};
+
+/* ===== phases / modules =====
+   Each module maps to a real MTSU course. ELM: ce, gni, dev, model(optional interactive), gen(level) */
+const PHASES=[
+{name:'Plans and field math',course:'CCM 2060 / CMT 2100',lessons:[
+
+{id:'scale',course:'CCM 2060',title:'Reading scale off a drawing',bloom:'Apply',
+ hint:'Multiply the measured length by the scale’s feet-per-inch. At 1/4"=1\'-0", every inch on paper is 4 feet.',
+ ce:{text:'A wall measures 7 inches on a sheet drawn at 1/4" = 1\'-0". How long is the wall in real life?',item:{q:'Actual length (feet) = ?',type:'num',ans:28,sol:'At 1/4" = 1\'-0", one inch of paper equals 4 feet. 7 in × 4 ft/in = <b>28 ft</b>.'}},
+ gni:`<p>An architectural scale states how many feet one inch of paper stands for.</p><div class="rule"><b>Common scales:</b> 1/8" = 1'-0" means 1 in = 8 ft. 1/4" = 1'-0" means 1 in = 4 ft. 1/2" = 1'-0" means 1 in = 2 ft. 3/16" and 3/32" show up on site plans.<br><b>Rule:</b> actual length = paper length × (feet per inch).</div><div class="ex">A 3.5 in line at 1/8" = 1'-0"<br>3.5 in × 8 ft/in = 28 ft</div>`,
+ dev:'Every quantity you pull off a drawing starts with reading scale right. Get the scale wrong and the whole takeoff is wrong.',
+ model:'scale',
+ gen(d){const scales=[['1/8\" = 1\'-0\"',8],['1/4\" = 1\'-0\"',4],['1/2\" = 1\'-0\"',2],['3/16\" = 1\'-0\"',16/3],['1\" = 20\'',20],['1\" = 30\'',30]];
+  const [lab,fpi]=pick(d===1?scales.slice(0,3):scales),inch=d===1?ri(2,9):rf(1.5,9.5,0.25),len=inch*fpi;
+  if(d===3&&Math.random()<.5){const area=r0(len)* (r0(inch*fpi)); // not used
+  }
+  return {q:`A dimension measures ${inch} in on a sheet at ${lab}. What is the actual length, in feet?`,type:'num',ans:len,tol:Math.max(0.5,len*0.01),sol:`${lab} means 1 in = ${r2(fpi)} ft. ${inch} × ${r2(fpi)} = <b>${r1(len)} ft</b>.`};}},
+
+{id:'area',course:'CMT 2100',title:'Area and volume takeoff',bloom:'Apply',
+ hint:'Area = length × width. Slab volume in cubic yards = length × width × thickness(ft) ÷ 27.',
+ ce:{text:'A commercial slab is 90 ft by 60 ft, poured 6 inches thick. Concrete is ordered by the cubic yard. How many cubic yards, before any waste allowance?',item:{q:'Cubic yards = ?',type:'num',ans:100,tol:.5,sol:'6 in = 0.5 ft. 90 × 60 × 0.5 = 2,700 ft³. 2,700 ÷ 27 = <b>100 cy</b>.'}},
+ gni:`<div class="rule"><b>Area</b> (ft²) = length × width.<br><b>Volume</b> (ft³) = area × thickness, with thickness in feet (inches ÷ 12).<br><b>Cubic yards</b> = ft³ ÷ 27. There are 27 ft³ in a cubic yard.</div><div class="ex">120 ft × 40 ft slab, 4 in thick<br>4 in = 0.333 ft<br>120 × 40 × 0.333 = 1,600 ft³<br>1,600 ÷ 27 = 59.3 cy</div>`,
+ dev:'Concrete, fill, base stone, and asphalt are all bought by the cubic yard or ton. This is the most-used takeoff you own.',
+ model:'slab',
+ gen(d){const L=ri(20,140),W=ri(15,90),th=pick(d===1?[4,6]:[4,5,6,8,10,12]);
+  if(d<3||Math.random()<.5){const cy=L*W*(th/12)/27;return {q:`A slab is ${L} ft × ${W} ft at ${th} in thick. How many cubic yards?`,type:'num',ans:cy,tol:Math.max(.3,cy*0.01),sol:`${th} in = ${r2(th/12)} ft. ${L} × ${W} × ${r2(th/12)} = ${commas(L*W*th/12)} ft³. ÷ 27 = <b>${r1(cy)} cy</b>.`};}
+  const waste=pick([5,8,10]),cy=L*W*(th/12)/27,ord=cy*(1+waste/100);
+  return {q:`A ${L} ft × ${W} ft slab at ${th} in needs a ${waste}% waste allowance. How many cubic yards do you order?`,type:'num',ans:ord,tol:Math.max(.3,ord*0.01),sol:`Base: ${L}×${W}×${r2(th/12)}/27 = ${r1(cy)} cy. +${waste}%: ${r1(cy)} × ${r2(1+waste/100)} = <b>${r1(ord)} cy</b>.`};}},
+
+{id:'pyth',course:'CMT 2100',title:'Squaring with the 3-4-5 method',bloom:'Apply',
+ hint:'A right triangle satisfies a² + b² = c². Any 3-4-5 multiple makes a square corner.',
+ ce:{text:'You lay out a building corner. One leg runs 12 ft, the other 16 ft. To confirm the corner is square, what should the diagonal measure?',item:{q:'Diagonal (feet) = ?',type:'num',ans:20,sol:'√(12² + 16²) = √(144 + 256) = √400 = <b>20 ft</b>. That’s a 3-4-5 corner scaled ×4.'}},
+ gni:`<div class="rule"><b>Pythagorean theorem:</b> a² + b² = c². The diagonal (hypotenuse) c = √(a² + b²).</div><div class="rule"><b>3-4-5 rule:</b> if two legs are 3 and 4 (or any multiple, like 6-8 or 12-16), a square corner reads 5 (or 10, or 20) on the diagonal. Crews use 3-4-5 to check corners without a transit.</div><div class="ex">Legs 9 ft and 12 ft<br>√(81 + 144) = √225 = 15 ft</div>`,
+ dev:'Squaring foundations, checking formwork, and running diagonals to verify a rectangle all come from this. A corner that isn’t square throws off everything stacked on it.',
+ gen(d){if(d===1){const t=pick([3,4,5,6,8]),a=3*t,b=4*t,c=5*t;return {q:`A corner has legs of ${a} ft and ${b} ft. What should the diagonal read if it’s square?`,type:'num',ans:c,sol:`√(${a}² + ${b}²) = √${a*a+b*b} = <b>${c} ft</b> (a 3-4-5 corner).`};}
+  const a=ri(6,40),b=ri(6,40),c=Math.sqrt(a*a+b*b);return {q:`A diagonal brace spans a rectangle ${a} ft × ${b} ft. How long is the brace?`,type:'num',ans:c,tol:.05,sol:`√(${a}² + ${b}²) = √${a*a+b*b} = <b>${r2(c)} ft</b>.`};}}
+]},
+
+{name:'Estimating and bidding',course:'CMT 3100 / CMT 4200',lessons:[
+
+{id:'unit',course:'CMT 3100',title:'Unit-cost estimating',bloom:'Apply',
+ hint:'Extended cost = quantity × unit cost. Keep units matched: cy with $/cy, sf with $/sf.',
+ ce:{text:'You take off 340 cubic yards of concrete. Your unit cost, installed, is $165 per cubic yard. What’s the extended line-item cost?',item:{q:'Extended cost = ?',type:'num',ans:56100,tol:1,sol:'340 cy × $165/cy = <b>$56,100</b>.'}},
+ gni:`<div class="rule"><b>Extended cost</b> = quantity × unit cost. This is the backbone of a unit-price estimate.</div><div class="rule">A unit cost usually bundles material, labor, and equipment for one unit of work. Match the unit: concrete in cy, formwork in sf of contact area, rebar in lb or tons, drywall in sf.</div><div class="ex">4,800 sf of drywall at $2.75/sf<br>4,800 × 2.75 = $13,200</div>`,
+ dev:'A full estimate is hundreds of these lines summed up. Master the single line and the estimate is just bookkeeping.',
+ model:'unit',
+ gen(d){const items=[['concrete','cy',ri(80,500),rf(140,210,5)],['formwork','sf',ri(600,4000),rf(6,14,0.25)],['rebar','lb',ri(2000,20000),rf(.9,1.6,.05)],['drywall','sf',ri(2000,15000),rf(2,4,.25)],['CMU block','sf',ri(800,6000),rf(11,22,.5)],['structural steel','ton',ri(10,120),rf(2400,3600,50)]];
+  const [n,u,q,c]=pick(items);
+  if(d<3)return {q:`Extend this line: ${commas(q)} ${u} of ${n} at ${money2(c)}/${u}.`,type:'num',ans:q*c,tol:Math.max(1,q*c*0.005),sol:`${commas(q)} × ${money2(c)} = <b>${money(q*c)}</b>.`};
+  const oh=pick([10,12,15]),prof=pick([5,8,10]),base=q*c,tot=base*(1+oh/100)*(1+prof/100);
+  return {q:`A line item of ${commas(q)} ${u} at ${money2(c)}/${u} carries ${oh}% overhead, then ${prof}% profit on top. What’s the marked-up total?`,type:'num',ans:tot,tol:Math.max(1,tot*0.005),sol:`Base ${money(base)}. ×${r2(1+oh/100)} = ${money(base*(1+oh/100))}. ×${r2(1+prof/100)} = <b>${money(tot)}</b>.`};}},
+
+{id:'markup',course:'CMT 4200',title:'Overhead, profit and markup',bloom:'Analyze',
+ hint:'Markup on cost: price = cost × (1 + markup). Margin is profit ÷ price. They’re not the same percentage.',
+ ce:{text:'Your job cost is $400,000. You want a 20% markup on cost to cover overhead and profit. What do you bid?',item:{q:'Bid price = ?',type:'num',ans:480000,tol:1,sol:'$400,000 × 1.20 = <b>$480,000</b>. The $80,000 markup is 16.7% of the bid, which is your margin.'}},
+ gni:`<div class="rule"><b>Markup</b> is a percent added to cost: price = cost × (1 + markup%).<br><b>Margin</b> is profit as a percent of price: margin = (price − cost) ÷ price.</div><div class="rule">To hit a target margin, divide: price = cost ÷ (1 − margin%). A 20% markup is only a 16.7% margin, which trips up a lot of estimators.</div><div class="ex">Cost $90,000, target margin 25%<br>price = 90,000 ÷ (1 − 0.25) = 90,000 ÷ 0.75 = $120,000</div>`,
+ dev:'The gap between markup and margin is where contractors quietly lose money. Bidding a 15% markup when the boss wanted a 15% margin leaves profit on the table every job.',
+ gen(d){const cost=ri(50,900)*1000;
+  if(d===1){const m=pick([10,15,20,25]);return {q:`Job cost is ${money(cost)}. Apply a ${m}% markup. What’s the bid?`,type:'num',ans:cost*(1+m/100),tol:1,sol:`${money(cost)} × ${r2(1+m/100)} = <b>${money(cost*(1+m/100))}</b>.`};}
+  if(d===2){const marg=pick([10,15,20,25,30]),price=cost/(1-marg/100);return {q:`Job cost is ${money(cost)}. You need a ${marg}% profit margin (percent of the bid). What’s the bid?`,type:'num',ans:price,tol:2,sol:`price = cost ÷ (1 − margin) = ${money(cost)} ÷ ${r2(1-marg/100)} = <b>${money(price)}</b>.`};}
+  const m=pick([15,20,25]),price=cost*(1+m/100),marg=(price-cost)/price*100;return {q:`You bid a ${money(cost)} job with a ${m}% markup on cost. What profit margin (percent of the bid) does that actually give you?`,type:'num',ans:marg,tol:.2,sol:`Bid = ${money(price)}. Margin = (${money(price)} − ${money(cost)}) ÷ ${money(price)} = <b>${pct(marg)}</b>.`};}},
+
+{id:'prod',course:'CMT 3100',title:'Labor productivity and crew cost',bloom:'Apply',
+ hint:'Labor hours = quantity ÷ production rate. Labor cost = hours × crew wage.',
+ ce:{text:'A crew places rebar at 500 lb per hour. You have 9,000 lb to place, and the crew runs $320 per hour, all-in. What’s the labor cost for the rebar?',item:{q:'Labor cost = ?',type:'num',ans:5760,tol:1,sol:'9,000 ÷ 500 = 18 crew-hours. 18 × $320 = <b>$5,760</b>.'}},
+ gni:`<div class="rule"><b>Labor hours</b> = quantity ÷ production rate (units per hour).<br><b>Labor cost</b> = labor hours × crew rate ($/hr).<br><b>Unit labor cost</b> = crew rate ÷ production rate = $ per unit.</div><div class="ex">Masons lay 150 block/day, crew costs $1,800/day<br>unit cost = 1,800 ÷ 150 = $12/block</div>`,
+ dev:'Productivity is the number estimators argue over most, because labor is the riskiest line. A 10% miss on the rate is a 10% miss on the single biggest cost on the job.',
+ model:'prod',
+ gen(d){const jobs=[['place concrete','cy',rf(8,16),ri(60,400)],['lay CMU block','block',ri(120,220),ri(300,2500)],['hang drywall','sf',ri(60,120),ri(2000,12000)],['set formwork','sf',ri(25,60),ri(800,4000)],['frame wall','lf',ri(40,90),ri(200,1500)]];
+  const [n,u,rate,qty]=pick(jobs),wage=rf(260,420,10),hrs=qty/rate;
+  if(d<3)return {q:`A crew can ${n} at ${rate} ${u}/hr. There are ${commas(qty)} ${u} to do. How many crew-hours?`,type:'num',ans:hrs,tol:Math.max(.1,hrs*0.01),sol:`${commas(qty)} ÷ ${rate} = <b>${r1(hrs)} hours</b>.`};
+  return {q:`A crew runs ${money(wage)}/hr and can ${n} at ${rate} ${u}/hr. What’s the labor cost to do ${commas(qty)} ${u}?`,type:'num',ans:hrs*wage,tol:Math.max(1,hrs*wage*0.01),sol:`Hours: ${commas(qty)} ÷ ${rate} = ${r1(hrs)}. Cost: ${r1(hrs)} × ${money(wage)} = <b>${money(hrs*wage)}</b>.`};}}
+]},
+
+{name:'Scheduling',course:'CMT 4120',lessons:[
+
+{id:'dur',course:'CMT 4120',title:'Activity duration',bloom:'Apply',
+ hint:'Duration (days) = quantity ÷ (crew output per day). Round up to whole days to plan.',
+ ce:{text:'You have 1,200 cubic yards of excavation. One scraper moves 200 cy per day. How many days for one scraper?',item:{q:'Duration (days) = ?',type:'num',ans:6,sol:'1,200 ÷ 200 = <b>6 days</b>.'}},
+ gni:`<div class="rule"><b>Duration</b> = quantity ÷ daily output.<br>Daily output = crew size × production per worker, or equipment output per day.<br>More crews or machines shortens duration: duration = quantity ÷ (units/day × number of crews).</div><div class="ex">6,000 sf to pave, 1,500 sf/day per paver, 2 pavers<br>6,000 ÷ (1,500 × 2) = 2 days</div>`,
+ dev:'Durations are the building blocks of the schedule. Every bar on the Gantt chart is a quantity divided by a rate.',
+ gen(d){const q=ri(400,6000),rate=pick([150,200,250,300,400,500]),crews=d===3?ri(1,4):1,dur=q/(rate*crews);
+  if(crews===1)return {q:`${commas(q)} units of work at ${rate} units/day. How many days?`,type:'num',ans:dur,tol:Math.max(.1,dur*0.01),sol:`${commas(q)} ÷ ${rate} = <b>${r1(dur)} days</b>.`};
+  return {q:`${commas(q)} units at ${rate} units/day per crew, with ${crews} crews running. How many days?`,type:'num',ans:dur,tol:Math.max(.1,dur*0.01),sol:`${commas(q)} ÷ (${rate} × ${crews}) = <b>${r1(dur)} days</b>.`};}},
+
+{id:'cpm',course:'CMT 4120',title:'Critical path and float',bloom:'Analyze',
+ hint:'The critical path is the longest path through the network. Float = how long an activity can slip without delaying the finish.',
+ ce:{text:'Two parallel chains run from start to finish. Chain A: 5 + 7 + 4 days. Chain B: 6 + 8 days. What’s the project duration?',item:{q:'Project duration (days) = ?',type:'num',ans:16,sol:'Chain A = 16 days, Chain B = 14 days. The project takes the longer path: <b>16 days</b>. Chain A is critical.'}},
+ gni:`<div class="rule"><b>Critical path:</b> the longest sequence of dependent activities. Its length sets the shortest possible project duration. Activities on it have zero float.</div><div class="rule"><b>Total float</b> = the slack on a non-critical activity = (duration of critical path through that point) − (duration of its own path). Slip more than the float and the end date moves.</div><div class="ex">Critical path 16 days, a parallel chain 14 days<br>that chain has 16 − 14 = 2 days of float</div>`,
+ dev:'The critical path tells you which delays actually cost you the deadline and which don’t. It’s how you decide where to throw extra crews and where you can relax.',
+ gen(d){const A=[ri(3,9),ri(4,10),ri(3,8)],B=[ri(4,11),ri(5,12)],sa=A.reduce((x,y)=>x+y),sb=B.reduce((x,y)=>x+y),dur=Math.max(sa,sb);
+  if(d===1)return {q:`Chain A: ${A.join(' + ')} days. Chain B: ${B.join(' + ')} days. Both run start to finish in parallel. Project duration?`,type:'num',ans:dur,sol:`A = ${sa}, B = ${sb}. Longer path wins: <b>${dur} days</b>.`};
+  const flo=Math.abs(sa-sb),short=sa<sb?'A':'B';return {q:`Chain A: ${A.join(' + ')} days. Chain B: ${B.join(' + ')} days, parallel. How much total float does the shorter chain (${short}) have?`,type:'num',ans:flo,sol:`A = ${sa}, B = ${sb}. The shorter chain can slip ${flo} days before it becomes critical: <b>${flo} days float</b>.`};}}
+]},
+
+{name:'Concrete and materials',course:'CMT 3000',lessons:[
+
+{id:'wc',course:'CMT 3000',title:'Water-cement ratio and strength',bloom:'Analyze',
+ hint:'w/c = weight of water ÷ weight of cement. Lower w/c means higher strength and lower workability.',
+ ce:{text:'A mix uses 280 lb of water and 560 lb of cement per cubic yard. What’s the water-cement ratio?',item:{q:'w/c ratio = ?',type:'num',ans:0.5,tol:.005,sol:'280 ÷ 560 = <b>0.50</b>. A w/c around 0.45–0.50 is typical for commercial structural concrete.'}},
+ gni:`<div class="rule"><b>Water-cement ratio</b> w/c = weight of water ÷ weight of cementitious material. It is the single biggest driver of concrete strength.</div><div class="rule"><b>Lower w/c → higher strength, lower slump</b> (stiffer, harder to place). Higher w/c is easier to place but weaker and more porous. Typical structural mixes run 0.40–0.50.</div><div class="ex">300 lb water, 600 lb cement<br>w/c = 300 ÷ 600 = 0.50</div>`,
+ dev:'Water is the cheapest thing on the truck and the fastest way to wreck a pour. Adding water on site to make concrete “work better” is how slabs end up under strength.',
+ model:'wc',
+ gen(d){if(d<3){const cem=pick([470,520,560,600,640,660]),wc=pick([0.40,0.42,0.45,0.48,0.50,0.55]),w=cem*wc;return {q:`A mix has ${cem} lb cement and ${r0(w)} lb water per cy. What’s the w/c ratio?`,type:'num',ans:w/cem,tol:.01,sol:`${r0(w)} ÷ ${cem} = <b>${r2(w/cem)}</b>.`};}
+  const cem=pick([520,560,600,640]),wc=pick([0.44,0.46,0.48,0.50]);return {q:`You want a ${wc} w/c ratio with ${cem} lb of cement per cy. How many pounds of water?`,type:'num',ans:cem*wc,tol:1,sol:`water = w/c × cement = ${wc} × ${cem} = <b>${r0(cem*wc)} lb</b>.`};}},
+
+{id:'yield',course:'CMT 3000',title:'Concrete yield and batch',bloom:'Apply',
+ hint:'Yield (ft³) = total batch weight ÷ unit weight. One cy = 27 ft³.',
+ ce:{text:'A batch weighs 3,915 lb and the concrete’s unit weight is 145 lb/ft³. Does the batch yield a full cubic yard (27 ft³)?',item:{q:'Yield (ft³) = ?',type:'num',ans:27,tol:.3,sol:'3,915 ÷ 145 = 27.0 ft³ = exactly 1 cy. Yield checks good.'}},
+ gni:`<div class="rule"><b>Yield</b> (volume produced) = total batch weight ÷ fresh unit weight.<br>Normal-weight concrete runs about 140–150 lb/ft³. A full cubic yard is 27 ft³.</div><div class="rule">If the batch yields less than 27 ft³/cy, you’re short and will run out. More than 27 and you’ve over-yielded (usually too much air or water).</div><div class="ex">4,050 lb batch, 150 lb/ft³<br>4,050 ÷ 150 = 27 ft³ = 1.0 cy</div>`,
+ dev:'Yield is how you catch a bad batch before it leaves you short three trucks into a pour. It ties the batch ticket to what actually comes out of the chute.',
+ gen(d){const uw=pick([140,143,145,148,150]);if(d<3){const cy=pick([1,1,2,3]),wt=uw*27*cy;return {q:`A load weighs ${commas(wt)} lb at ${uw} lb/ft³. What’s the yield in ft³?`,type:'num',ans:wt/uw,tol:.3,sol:`${commas(wt)} ÷ ${uw} = <b>${r1(wt/uw)} ft³</b> (${r2(wt/uw/27)} cy).`};}
+  const need=ri(20,120),wt=uw*27,loads=need/(wt/uw/27);return {q:`You need ${need} cy. Each truck holds 1 cy batched at ${uw} lb/ft³ with good yield. Roughly how many ft³ total must the plant produce?`,type:'num',ans:need*27,tol:1,sol:`${need} cy × 27 ft³/cy = <b>${commas(need*27)} ft³</b>.`};}}
+]},
+
+{name:'Structural materials',course:'CMT 3000',lessons:[
+
+{id:'rebar',course:'CMT 3000',title:'Rebar sizing and weight',bloom:'Apply',
+ hint:'Bar number ÷ 8 = diameter in inches. A #8 is 1 inch. Weight: multiply total length by the bar’s plf.',
+ ce:{text:'A footing needs 640 linear feet of #5 rebar. A #5 bar weighs 1.043 lb per foot. How much does the steel weigh?',item:{q:'Weight (lb) = ?',type:'num',ans:668,tol:2,sol:'640 ft × 1.043 lb/ft ≈ <b>668 lb</b>.'}},
+ gni:`<div class="rule"><b>Bar number = eighths of an inch.</b> #4 = 4/8 = 0.5 in dia. #8 = 1.0 in. #3 = 0.375 in.</div><div class="rule"><b>Unit weights (lb/ft):</b> #3 = 0.376, #4 = 0.668, #5 = 1.043, #6 = 1.502, #7 = 2.044, #8 = 2.670, #9 = 3.400. Total weight = total length × plf. Steel is ordered by weight (lb or tons).</div><div class="ex">1,000 ft of #4<br>1,000 × 0.668 = 668 lb = 0.33 ton</div>`,
+ dev:'Rebar is bought by weight but detailed by length, so every takeoff crosses this bridge. Order by the wrong bar size and the whole mat is wrong.',
+ model:'rebar',
+ gen(d){const bn=pick([3,4,5,6,7,8]),[dia,area,plf]=BAR[bn];
+  if(d===1)return {q:`What is the diameter of a #${bn} bar, in inches?`,type:'num',ans:dia,tol:.02,sol:`#${bn} = ${bn}/8 = <b>${dia} in</b>.`};
+  if(d===2){const lf=ri(200,3000);return {q:`${commas(lf)} linear feet of #${bn} bar. How much does it weigh (lb)? (#${bn} = ${plf} lb/ft)`,type:'num',ans:lf*plf,tol:Math.max(1,lf*plf*0.01),sol:`${commas(lf)} × ${plf} = <b>${commas(lf*plf)} lb</b>.`};}
+  const lf=ri(1000,9000),lb=lf*plf,tons=lb/2000;return {q:`${commas(lf)} lf of #${bn} bar (${plf} lb/ft). How many tons of steel is that?`,type:'num',ans:tons,tol:Math.max(.02,tons*0.01),sol:`${commas(lf)} × ${plf} = ${commas(lb)} lb. ÷ 2,000 = <b>${r2(tons)} tons</b>.`};}},
+
+{id:'cmu',course:'CMT 3000',title:'Masonry block and coursing',bloom:'Apply',
+ hint:'Standard CMU face is 8"×16" nominal, so about 1.125 blocks per square foot. One course of block is 8 inches of height.',
+ ce:{text:'A CMU wall is 40 ft long and 8 ft high. At roughly 1.125 blocks per square foot of wall, how many block do you need (before waste)?',item:{q:'Block count = ?',type:'num',ans:360,tol:5,sol:'40 × 8 = 320 sf. 320 × 1.125 = <b>360 block</b>.'}},
+ gni:`<div class="rule"><b>Standard CMU:</b> 8 in high × 16 in long nominal face (includes the 3/8" mortar joint). That face is 8×16 = 128 in² = 0.889 ft², so you need about <b>1.125 block per sf</b> of wall.</div><div class="rule"><b>Coursing:</b> each course adds 8 in of height. Wall height ÷ 8 in = number of courses. 3 courses = 24 in = 2 ft.</div><div class="ex">A 24 ft × 10 ft wall<br>240 sf × 1.125 = 270 block<br>10 ft = 120 in ÷ 8 = 15 courses</div>`,
+ dev:'Block and coursing drive masonry takeoff and layout. Coursing also tells you where openings land without fighting the module.',
+ gen(d){const L=ri(16,80),H=pick([8,8.67,10,12,16]);
+  if(d===1){const courses=Math.round(H*12/8);return {q:`A CMU wall is ${H} ft high. How many 8-inch courses is that?`,type:'num',ans:H*12/8,tol:.3,sol:`${H} ft = ${H*12} in ÷ 8 in/course = <b>${r1(H*12/8)} courses</b>.`};}
+  const sf=L*H,blk=sf*1.125;if(d===2)return {q:`A CMU wall is ${L} ft × ${H} ft. At 1.125 block/sf, how many block (before waste)?`,type:'num',ans:blk,tol:5,sol:`${L} × ${H} = ${r0(sf)} sf. × 1.125 = <b>${r0(blk)} block</b>.`};
+  const waste=pick([3,5]),ord=blk*(1+waste/100);return {q:`A ${L} ft × ${H} ft CMU wall at 1.125 block/sf, plus ${waste}% waste. How many block do you order?`,type:'num',ans:ord,tol:6,sol:`${r0(sf)} sf × 1.125 = ${r0(blk)} block. +${waste}% = <b>${r0(ord)} block</b>.`};}}
+]},
+
+{name:'Soils, safety and site',course:'CMT 2320 / CCM 2200',lessons:[
+
+{id:'compact',course:'CMT 2320',title:'Compaction and Proctor density',bloom:'Analyze',
+ hint:'Relative compaction = field dry density ÷ maximum (Proctor) dry density × 100. Specs usually want 95%.',
+ ce:{text:'A Proctor test gives a maximum dry density of 120 lb/ft³. A field nuclear gauge reads 114 lb/ft³. What percent compaction did you hit?',item:{q:'Relative compaction (%) = ?',type:'num',ans:95,tol:.3,sol:'114 ÷ 120 = 0.95 = <b>95%</b>. That meets a typical 95% spec.'}},
+ gni:`<div class="rule"><b>Relative compaction</b> = (field dry density ÷ maximum dry density) × 100.<br>Maximum dry density comes from a Proctor test (lab). Field density comes from a nuclear gauge or sand cone.</div><div class="rule">Most structural fill and subgrade specs call for <b>95%</b> of the standard Proctor. Fail it and the fill gets reworked and re-rolled before anything goes on top.</div><div class="ex">Max 118 lb/ft³, field 112 lb/ft³<br>112 ÷ 118 = 94.9% — just short of 95%</div>`,
+ dev:'Compaction testing is pass/fail gating on every pad, footing, and pavement subgrade. A failed test stops the next trade cold, so the math decides the schedule.',
+ model:'compact',
+ gen(d){const max=pick([112,115,118,120,122,125,128]);
+  if(d<3){const rc=pick([92,94,95,96,98]),field=max*rc/100;return {q:`Proctor max is ${max} lb/ft³. The field reads ${r1(field)} lb/ft³. What percent compaction?`,type:'num',ans:field/max*100,tol:.3,sol:`${r1(field)} ÷ ${max} = <b>${pct(field/max*100)}</b>.`};}
+  const spec=95,need=max*spec/100;return {q:`Proctor max is ${max} lb/ft³ and the spec is ${spec}%. What field dry density must you hit, in lb/ft³?`,type:'num',ans:need,tol:.5,sol:`${spec}% × ${max} = <b>${r1(need)} lb/ft³</b> minimum.`};}},
+
+{id:'slope',course:'CCM 2200',title:'OSHA excavation slope ratios',bloom:'Apply',
+ hint:'For Type B soil, OSHA requires a 1:1 slope (1 ft back for every 1 ft deep). Width added each side = depth × the horizontal ratio.',
+ ce:{text:'A trench is 8 ft deep in Type B soil, which OSHA slopes at 1:1 (horizontal:vertical). How far back must each side be cut from the trench edge?',item:{q:'Horizontal cutback each side (feet) = ?',type:'num',ans:8,sol:'1:1 means 1 ft back per 1 ft deep. 8 ft deep × 1 = <b>8 ft</b> each side.'}},
+ gni:`<div class="rule"><b>OSHA sloping</b> protects against cave-ins in trenches 5 ft or deeper (29 CFR 1926 Subpart P). The max allowable slope depends on soil type:<br>Type A: 0.75:1 (¾ ft back per ft deep)<br>Type B: 1:1<br>Type C: 1.5:1</div><div class="rule">Cutback each side = depth × horizontal ratio. Top width = bottom width + 2 × cutback.</div><div class="ex">6 ft deep, Type C (1.5:1)<br>cutback = 6 × 1.5 = 9 ft each side</div>`,
+ dev:'This is life-safety, not just layout. Trench collapse is one of the top killers in construction, and these ratios are federally enforced. It also drives how much you excavate and haul.',
+ gen(d){const soils=[['A',0.75],['B',1],['C',1.5]],[t,r]=pick(soils),dep=d===1?pick([5,6,8,10]):rf(5,16,0.5);
+  if(d<3)return {q:`A trench is ${dep} ft deep in Type ${t} soil (OSHA slope ${r}:1). How far back must each side be sloped?`,type:'num',ans:dep*r,tol:.1,sol:`${dep} × ${r} = <b>${r1(dep*r)} ft</b> each side.`};
+  const bw=ri(3,8),top=bw+2*dep*r;return {q:`A ${dep} ft deep trench in Type ${t} soil (${r}:1), ${bw} ft wide at the bottom. How wide is the top of the excavation?`,type:'num',ans:top,tol:.2,sol:`Cutback ${r1(dep*r)} ft each side. Top = ${bw} + 2 × ${r1(dep*r)} = <b>${r1(top)} ft</b>.`};}}
+]},
+
+{name:'BIM and closeout',course:'CMT 4320 / CMT 4280',lessons:[
+
+{id:'bim',course:'CMT 4320',title:'Model quantities and LOD',bloom:'Understand',
+ hint:'BIM pulls quantities straight from the model. Level of Development (LOD) says how reliable that geometry and data is.',
+ ce:(()=>{const c=mc(['LOD 100','LOD 200','LOD 300','LOD 500'],2);return {text:'On the LOD scale, which level means elements are modeled with accurate size, shape, location and orientation — reliable enough to pull real quantities for a hard bid?',item:{q:'Which LOD?',type:'choice',options:c.options,ans:c.ans,sol:'<b>LOD 300</b> is accurate geometry fixed in place, good for coordinated documents and quantity takeoff. 100 is conceptual, 200 is approximate, 500 is field-verified as-built.'}};})(),
+ gni:`<div class="rule"><b>BIM</b> (Building Information Modeling) is a 3D model carrying data, not just lines. Quantities, clashes, and schedules come straight out of it.</div><div class="rule"><b>LOD, Level of Development:</b><br>100 conceptual (massing)<br>200 approximate geometry<br>300 accurate geometry, fixed location — good for takeoff<br>350 adds connections/interfaces for coordination<br>400 fabrication-ready<br>500 field-verified as-built</div><div class="rule"><b>Clash detection</b> finds where systems (duct vs. beam vs. pipe) occupy the same space before they’re built.</div>`,
+ dev:'BIM is the hub of modern commercial delivery: takeoff, clash coordination, scheduling (4D), and cost (5D) all hang off the model. Knowing what each LOD can be trusted for keeps you from bidding off geometry that was only conceptual.',
+ gen(d){const bank=[
+   ['Which LOD is appropriate for a reliable quantity takeoff on a hard bid?',['LOD 100','LOD 200','LOD 300','LOD 500'],2,'LOD 300 has accurate geometry and location, suitable for takeoff.'],
+   ['What does clash detection find?',['Budget overruns','Where building systems physically collide in the model','Schedule delays','Permit errors'],1,'It finds physical interferences between systems before construction.'],
+   ['“4D” BIM adds which dimension to the 3D model?',['Cost','Time / schedule','Energy','Facilities data'],1,'4D links model elements to the schedule; 5D adds cost.'],
+   ['LOD 500 represents a model that is:',['Conceptual massing','Fabrication-ready','Field-verified as-built','Approximate geometry'],2,'LOD 500 is verified against actual field conditions.'],
+   ['The main estimating payoff of BIM over 2D takeoff is:',['Prettier drawings','Quantities extracted directly from model geometry','Fewer permits','Lower insurance'],1,'Quantities come straight from the model, cutting manual takeoff error.']];
+  const [q,opts,ans,sol]=pick(bank),c=mc(opts,ans);return {q,type:'choice',options:c.options,ans:c.ans,sol:'<b>'+opts[ans]+'.</b> '+sol};}},
+
+{id:'retain',course:'CMT 4280',title:'Progress billing and retainage',bloom:'Apply',
+ hint:'Retainage is a percent withheld from each payment until closeout. Payment this period = earned to date − retainage − previously paid.',
+ ce:{text:'A $2,000,000 contract is 40% complete. The owner holds 10% retainage. How much has been earned, and how much is retained so far?',item:{q:'Amount retained to date = ?',type:'num',ans:80000,tol:1,sol:'Earned = 40% × $2,000,000 = $800,000. Retainage = 10% × $800,000 = <b>$80,000</b> held back.'}},
+ gni:`<div class="rule"><b>Retainage</b> is money the owner withholds from each progress payment (often 5–10%) as leverage to ensure completion. It’s released at substantial completion or closeout.</div><div class="rule"><b>This period’s payment</b> = (value earned to date) − (retainage) − (amount already paid in prior periods).</div><div class="ex">$1M contract, 60% done, 10% retainage, $400k paid before<br>earned 600,000 − retainage 60,000 − prior 400,000 = $140,000 due</div>`,
+ dev:'Cash flow makes or breaks commercial GCs. Retainage can be your entire profit sitting in the owner’s account, so you track it to the dollar and fight to get it released.',
+ gen(d){const K=ri(5,40)*100000,ret=pick([5,10]),pctDone=ri(20,90);const earned=K*pctDone/100,held=earned*ret/100;
+  if(d===1)return {q:`A ${money(K)} contract is ${pctDone}% complete. How much has been earned?`,type:'num',ans:earned,tol:1,sol:`${pctDone}% × ${money(K)} = <b>${money(earned)}</b>.`};
+  if(d===2)return {q:`${money(K)} contract, ${pctDone}% complete, ${ret}% retainage. How much is held in retainage to date?`,type:'num',ans:held,tol:1,sol:`Earned ${money(earned)}. ${ret}% retainage = <b>${money(held)}</b>.`};
+  const prior=Math.round(earned*ri(30,70)/100/1000)*1000,due=earned-held-prior;return {q:`${money(K)} contract, now ${pctDone}% complete, ${ret}% retainage. You were previously paid ${money(prior)}. What’s due this period?`,type:'num',ans:due,tol:1,sol:`Earned ${money(earned)} − retainage ${money(held)} − prior ${money(prior)} = <b>${money(due)}</b>.`};}}
+]}
+];
+const ROMAN=['I','II','III','IV','V','VI','VII','VIII'];
+const LESSONS=[],LESSON={};
+PHASES.forEach((ph,pi)=>ph.lessons.forEach((l,li)=>{l.num=`${pi+1}.${li+1}`;l.phase=pi;LESSONS.push(l);LESSON[l.id]=l;}));
+
+/* ===== state ===== */
+const KEY='cm-field-ops-v1';
+let S={lessons:{},journal:[]};
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+let saveT=null;const save=()=>{clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},150);};
+function LS(id){return S.lessons[id]||(S.lessons[id]={step:0,att:0,cor:0,hist:[],go:false,pp:'',dev:'',ceOK:null});}
+function h(tag,attrs,...kids){const el=document.createElement(tag);for(const [k,v] of Object.entries(attrs||{})){if(v===false||v==null)continue;if(k==='class')el.className=v;else if(k==='html')el.innerHTML=v;else if(k.startsWith('on'))el.addEventListener(k.slice(2),v);else el.setAttribute(k,v===true?'':v);}for(const c of kids.flat()){if(c==null||c===false)continue;el.append(c.nodeType?c:document.createTextNode(c));}return el;}
+const $=s=>document.querySelector(s);
+
+/* ===== routing ===== */
+let view={name:'home'};
+function go(name,arg){view={name,arg};render();scrollTo(0,0);}
+function render(){const app=$('#app');app.replaceChildren();document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-current',(b.dataset.v===view.name||(view.name==='lesson'&&b.dataset.v==='home'))?'page':'false'));({home:vHome,lesson:vLesson,journal:vJournal,method:vMethod})[view.name](app);}
+const statusOf=l=>{const L=S.lessons[l.id];return !L?'new':L.go?'go':(L.att||L.ceOK!=null)?'prog':'new';};
+const nextLesson=()=>LESSONS.find(l=>!LS(l.id).go)||LESSONS[0];
+
+/* ===== home ===== */
+function vHome(app){
+  const done=LESSONS.filter(l=>S.lessons[l.id]&&S.lessons[l.id].go).length,nx=nextLesson();
+  app.append(h('section',{class:'hero'},
+    h('div',{class:'herotag mono'},'MTSU Commercial Construction Management · field math trainer'),
+    h('h1',{class:'display'},'Field Ops'),
+    h('p',{class:'lead'},'The working math behind the Commercial CM curriculum, one course at a time: plan reading, takeoff, estimating, scheduling, concrete, structural materials, soils and safety, BIM and closeout. Each module uses the Experiential Learning Model: run it cold, reflect, learn the method, connect it, then train to a GO.'),
+    h('div',{class:'progress'},h('div',{class:'bar'},h('i',{style:`width:${done/LESSONS.length*100}%`})),h('span',{class:'mono small'},`${done} / ${LESSONS.length} modules at GO`)),
+    h('div',{class:'row'},h('button',{class:'btn primary',onclick:()=>go('lesson',nx.id)},done?`Continue · ${nx.title}`:'Start module 1.1'),h('button',{class:'btn ghost',onclick:()=>go('method')},'How this works'))));
+  PHASES.forEach((ph,pi)=>{const log=h('div',{class:'log'});
+    ph.lessons.forEach(l=>{const st=statusOf(l);log.append(h('button',{class:'logrow '+st,onclick:()=>go('lesson',l.id)},
+      h('span',{class:'lnum mono'},l.num),h('span',{class:'lcourse mono'},l.course),h('span',{class:'ltitle'},l.title),h('span',{class:'lbloom'},l.bloom),h('span',{class:'chip '+st},st==='go'?'GO':st==='prog'?'OPEN':'—')));});
+    const gd=ph.lessons.filter(l=>statusOf(l)==='go').length;
+    app.append(h('section',{class:'phase'},h('div',{class:'phead'},h('span',{class:'roman'},ROMAN[pi]),h('div',{},h('h2',{},ph.name),h('div',{class:'pcourse mono small'},ph.course)),h('span',{class:'mono small pcount'},`${gd}/${ph.lessons.length}`)),log));});
+}
+
+/* ===== item widget ===== */
+const PH={num:'Enter a number',text:'Type your answer'};
+function keypad(get){const K=['7','8','9','4','5','6','1','2','3','0','.','−'];
+  return h('div',{class:'keys'},K.map(c=>h('button',{type:'button',onpointerdown:e=>e.preventDefault(),onclick:()=>{const t=get();if(!t||t.disabled)return;const a=t.selectionStart??t.value.length,b=t.selectionEnd??a,ins=c==='−'?'-':c;t.value=t.value.slice(0,a)+ins+t.value.slice(b);t.focus();t.setSelectionRange(a+ins.length,a+ins.length);}},c)),
+    h('button',{type:'button',class:'wide',onpointerdown:e=>e.preventDefault(),onclick:()=>{const t=get();if(!t||t.disabled)return;t.value=t.value.slice(0,-1);t.focus();}},'⌫'));}
+function itemWidget(item,{onResult=()=>{}}={}){
+  const w=h('div',{class:'item'});w.append(h('div',{class:'q',html:item.q}));
+  const fb=h('div',{class:'fb','aria-live':'polite'});let done=false,inputs=[],last=null,cb=null,cbtns=[];
+  const finish=(r,shown)=>{done=true;inputs.forEach(i=>i.disabled=true);if(cb)cb.disabled=true;cbtns.forEach(b=>b.disabled=true);
+    fb.className='fb '+(r.ok?'go':'nogo');fb.replaceChildren(h('strong',{},r.ok?'GO':(shown?'Solution shown · NO-GO':'NO-GO')));
+    if(r.msg)fb.append(h('span',{},' '+r.msg));if(item.sol)fb.append(h('div',{class:'sol',html:item.sol}));onResult(r.ok);};
+  if(item.type==='choice'){const box=h('div',{class:'choices'});item.options.forEach((o,i)=>{const b=h('button',{type:'button',onclick:()=>{if(done)return;const ok=i===item.ans;b.classList.add(ok?'right':'wrong');if(!ok)cbtns[item.ans].classList.add('right');finish({ok});}},o);cbtns.push(b);box.append(b);});w.append(box,fb);w.reveal=()=>{if(done)return;cbtns[item.ans].classList.add('right');finish({ok:false},true);};return w;}
+  const mk=ph=>{const i=h('input',{type:'text',inputmode:'decimal',placeholder:ph||'',autocomplete:'off',autocapitalize:'off',spellcheck:'false',enterkeyhint:'done'});i.addEventListener('focus',()=>last=i);i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doCheck();}});inputs.push(i);return i;};
+  if(item.type==='fields')w.append(h('div',{class:'fields'},item.fields.map(f=>h('label',{class:'field'},h('span',{},f.label),mk('')))));
+  else w.append(mk(PH[item.type]));
+  w.append(keypad(()=>last||inputs[0]));
+  function doCheck(){if(done)return;const r=check(item,item.type==='fields'?inputs.map(i=>i.value):inputs[0].value);if(r.err){fb.className='fb err';fb.textContent=r.err;return;}finish(r);}
+  cb=h('button',{class:'btn primary',type:'button',onclick:doCheck},'Check');w.append(h('div',{class:'row'},cb),fb);
+  w.reveal=()=>{if(!done)finish({ok:false},true);};return w;
+}
+
+/* ===== interactive models ===== */
+function field(label,unit,val,min,max,step,on){const out=h('output',{class:'mono'},val+(unit?' '+unit:''));const r=h('input',{type:'range',min,max,step,value:val,'aria-label':label});r.addEventListener('input',()=>{out.textContent=(step<1?r.value:Math.round(r.value))+(unit?' '+unit:'');on(parseFloat(r.value));});return {el:h('label',{class:'ms'},h('span',{class:'mono'},label),out,r),r};}
+function readout(rows){return h('div',{class:'ro'},rows.map(([k,v])=>h('div',{class:'rorow'},h('span',{class:'rok'},k),h('span',{class:'rov mono'},v))));}
+const MODELS={
+  slab(){let L=90,W=60,T=6,waste=5;const box=h('div',{class:'model'});const svg=h('div',{class:'mviz'});const ro=h('div');
+    function upd(){const cy=L*W*(T/12)/27,ord=cy*(1+waste/100);const sc=Math.min(260/Math.max(L,1),150/Math.max(W,1));
+      svg.innerHTML=`<svg viewBox="0 0 300 180" width="100%"><rect x="20" y="15" width="${L*sc}" height="${W*sc}" fill="var(--fill-slab)" stroke="var(--accent)" stroke-width="2"/><text x="${20+L*sc/2}" y="12" text-anchor="middle" class="dim-t">${L} ft</text><text x="14" y="${15+W*sc/2}" text-anchor="middle" class="dim-t" transform="rotate(-90 14 ${15+W*sc/2})">${W} ft</text></svg>`;
+      ro.replaceChildren(readout([['Area',commas(L*W)+' ft²'],['Volume',commas(L*W*T/12)+' ft³'],['Concrete',r1(cy)+' cy'],['Order with '+waste+'% waste',r1(ord)+' cy']]));}
+    const f1=field('Length','ft',L,10,150,1,v=>{L=v;upd()}),f2=field('Width','ft',W,10,100,1,v=>{W=v;upd()}),f3=field('Thickness','in',T,3,14,1,v=>{T=v;upd()}),f4=field('Waste','%',waste,0,15,1,v=>{waste=v;upd()});
+    box.append(svg,h('div',{class:'msl'},f1.el,f2.el,f3.el,f4.el),ro);upd();return box;},
+  scale(){let fpi=4,inch=7;const box=h('div',{class:'model'}),ro=h('div');const labs={2:'1/2" = 1\'-0"',4:'1/4" = 1\'-0"',8:'1/8" = 1\'-0"',16:'1" = 16\''};
+    function upd(){ro.replaceChildren(readout([['Scale',labs[fpi]||('1 in = '+fpi+' ft')],['Measured on paper',inch+' in'],['Feet per inch',fpi+' ft'],['Actual length',r1(inch*fpi)+' ft']]));}
+    const f1=field('Feet per inch','ft',fpi,2,30,1,v=>{fpi=v;upd()}),f2=field('Paper length','in',inch,1,12,0.25,v=>{inch=v;upd()});
+    box.append(h('p',{class:'mhint'},'Set the scale and the length you measured. The actual length updates live.'),h('div',{class:'msl'},f1.el,f2.el),ro);upd();return box;},
+  unit(){let q=340,c=165;const box=h('div',{class:'model'}),ro=h('div');
+    function upd(){ro.replaceChildren(readout([['Quantity',commas(q)+' cy'],['Unit cost',money2(c)+'/cy'],['Extended cost',money(q*c)]]));}
+    const f1=field('Quantity','cy',q,10,600,5,v=>{q=v;upd()}),f2=field('Unit cost','$',c,100,250,5,v=>{c=v;upd()});
+    box.append(h('p',{class:'mhint'},'Watch how the extended cost swings with the unit price. On a big quantity, a few dollars per unit is real money.'),h('div',{class:'msl'},f1.el,f2.el),ro);upd();return box;},
+  prod(){let qty=9000,rate=500,wage=320;const box=h('div',{class:'model'}),ro=h('div');
+    function upd(){const hrs=qty/rate;ro.replaceChildren(readout([['Quantity',commas(qty)+' units'],['Production','=',],['Crew-hours',r1(hrs)+' hr'],['Unit labor cost',money2(wage/rate)+'/unit'],['Total labor',money(hrs*wage)]].filter(r=>r[1]!=='=')));}
+    const f1=field('Quantity','',qty,500,20000,100,v=>{qty=v;upd()}),f2=field('Rate','/hr',rate,50,800,10,v=>{rate=v;upd()}),f3=field('Crew wage','$/hr',wage,200,500,10,v=>{wage=v;upd()});
+    box.append(h('div',{class:'msl'},f1.el,f2.el,f3.el),ro);upd();return box;},
+  wc(){let cem=560,wc=50;const box=h('div',{class:'model'}),bar=h('div',{class:'wcbar'}),ro=h('div');
+    function upd(){const w=cem*wc/100;const strong=wc<=45?'high':wc<=50?'good':'low';bar.style.setProperty('--p',((0.60-wc/100)/(0.60-0.35)*100)+'%');
+      ro.replaceChildren(readout([['Cement',cem+' lb'],['Water',r0(w)+' lb'],['w/c ratio',r2(wc/100)],['Relative strength',strong==='high'?'Highest (stiff)':strong==='good'?'Good':'Lower (wet)']]));}
+    const f1=field('Cement','lb',cem,400,700,10,v=>{cem=v;upd()}),f2=field('w/c ×100','',wc,35,60,1,v=>{wc=v;upd()});
+    box.append(h('p',{class:'mhint'},'Lower w/c is stronger but stiffer to place. The bar shows relative strength as you add water.'),h('div',{class:'wcwrap'},bar),h('div',{class:'msl'},f1.el,f2.el),ro);upd();return box;},
+  rebar(){let bn=5,lf=640;const box=h('div',{class:'model'}),ro=h('div'),sel=h('div',{class:'barsel'});
+    [3,4,5,6,7,8,9].forEach(n=>sel.append(h('button',{type:'button',class:'barbtn'+(n===bn?' on':''),onclick:()=>{bn=n;[...sel.children].forEach(b=>b.classList.remove('on'));sel.children[[3,4,5,6,7,8,9].indexOf(n)].classList.add('on');upd();}},'#'+n)));
+    function upd(){const [dia,area,plf]=BAR[bn];ro.replaceChildren(readout([['Bar size','#'+bn],['Diameter',dia+' in'],['Area',area+' in²'],['Unit weight',plf+' lb/ft'],['Total length',commas(lf)+' ft'],['Total weight',commas(lf*plf)+' lb ('+r2(lf*plf/2000)+' ton)']]));}
+    const f1=field('Total length','ft',lf,100,5000,50,v=>{lf=v;upd()});
+    box.append(h('p',{class:'mhint'},'Pick a bar size, set the length. Diameter, area and weight come from the standard bar tables.'),sel,h('div',{class:'msl'},f1.el),ro);upd();return box;},
+  compact(){let max=120,field_=114;const box=h('div',{class:'model'}),gauge=h('div',{class:'gauge'}),ro=h('div');
+    function upd(){const rc=field_/max*100;gauge.style.setProperty('--v',Math.min(100,(rc-85)/(102-85)*100)+'%');gauge.classList.toggle('pass',rc>=95);
+      ro.replaceChildren(readout([['Proctor max',max+' lb/ft³'],['Field density',r1(field_)+' lb/ft³'],['Relative compaction',pct(rc)],['95% spec',rc>=95?'PASS':'FAIL — rework']]));}
+    const f1=field('Proctor max','lb/ft³',max,110,130,1,v=>{max=v;if(field_>max)field_=max;upd()}),f2=field('Field density','lb/ft³',field_,100,130,1,v=>{field_=v;upd()});
+    box.append(h('p',{class:'mhint'},'Field density ÷ Proctor max. Cross 95% and the strip bar turns green — pass.'),h('div',{class:'gwrap'},gauge,h('div',{class:'gmark',style:'left:'+((95-85)/(102-85)*100)+'%'},'95%')),h('div',{class:'msl'},f1.el,f2.el),ro);upd();return box;},
+};
+
+/* ===== lesson (ELM) ===== */
+const STEPS=[['Run it cold','Concrete experience'],['Reflect','Publish & process'],['The method','Generalize'],['Connect it','Develop'],['Train to GO','Apply']];
+const PP_PROMPTS=['What did you try, step by step?','Did your answer match? Where did it go sideways?','What part felt shaky?'];
+function vLesson(app){
+  const l=LESSON[view.arg],L=LS(l.id);
+  const goChip=h('span',{class:'chip go',hidden:!L.go},'GO');
+  app.append(h('div',{class:'lhead'},h('button',{class:'link',onclick:()=>go('home')},'All modules'),
+    h('div',{class:'lmeta'},h('span',{class:'mono small'},`Module ${l.num}`),h('span',{class:'chip course'},l.course),h('span',{class:'chip'},'Bloom: '+l.bloom),goChip),
+    h('h1',{class:'ltitle2'},l.title)));
+  const stepper=h('div',{class:'stepper'}),panel=h('div',{class:'panel'});
+  const isDone=i=>[L.ceOK!=null,!!L.pp.trim(),L.step>2||L.go,!!L.dev.trim(),L.go][i];
+  STEPS.forEach(([t,sub],i)=>stepper.append(h('button',{type:'button',onclick:()=>show(i)},h('span',{class:'ck'}),h('span',{class:'st'},h('b',{},t),h('small',{},sub)))));
+  function refresh(){[...stepper.children].forEach((b,j)=>{b.setAttribute('aria-selected',j===L.step?'true':'false');b.querySelector('.ck').textContent=isDone(j)?'✓':j+1;b.classList.toggle('done',isDone(j));});goChip.hidden=!L.go;}
+  const nextBtn=(i,t)=>h('div',{class:'row end'},h('button',{class:'btn primary',onclick:()=>{show(i);stepper.scrollIntoView({block:'start'});}},t));
+  function show(i){L.step=i;save();refresh();panel.replaceChildren();[ce,pp,gni,dev,apply][i]();}
+  function ce(){panel.append(h('h2',{},'Run it cold'),h('p',{class:'note'},'Take a shot before any instruction. This shows what you already know from the field. Wrong costs nothing.'),h('p',{class:'scenario'},l.ce.text));
+    const nb=nextBtn(1,'Reflect →');nb.hidden=L.ceOK==null;
+    panel.append(itemWidget(l.ce.item,{onResult:ok=>{L.ceOK=ok;save();refresh();nb.hidden=false;}}),nb);}
+  function pp(){panel.append(h('h2',{},'Reflect'),h('p',{class:'note'},'A few honest lines. Naming where it went sideways is what makes the method stick.'));
+    if(L.ceOK!=null)panel.append(h('div',{class:'callout '+(L.ceOK?'okc':'')},h('b',{},L.ceOK?'You nailed the cold run. ':'Cold run missed, which is normal. '),h('span',{html:l.ce.item.sol})));
+    panel.append(h('ul',{class:'prompts'},PP_PROMPTS.map(p=>h('li',{},p))));
+    const ta=h('textarea',{rows:5});ta.value=L.pp;ta.addEventListener('input',()=>{L.pp=ta.value;save();});panel.append(ta,nextBtn(2,'The method →'));}
+  function gni(){panel.append(h('h2',{},'The method'),h('div',{class:'gni',html:l.gni}));
+    if(l.model&&MODELS[l.model]){panel.append(h('h3',{},'Interactive model'),MODELS[l.model]());}
+    panel.append(nextBtn(3,'Connect it →'));}
+  function dev(){panel.append(h('h2',{},'Connect it'),h('p',{class:'why'},l.dev),h('label',{class:'field'},h('span',{},'Where will you use this on a real job or in class? Name one spot.')));
+    const ta=h('textarea',{rows:4});ta.value=L.dev;ta.addEventListener('input',()=>{L.dev=ta.value;save();});panel.append(ta,nextBtn(4,'Train to GO →'));}
+  function apply(){
+    const lvl=()=>Math.min(3,1+Math.floor(L.cor/3));
+    panel.append(h('h2',{},'Train to standard'),h('p',{class:'note'},'Standard: GO on 4 of your last 5, with at least 5 reps. Problems get harder as you string correct answers. Hints are free; showing the solution counts as a NO-GO.'));
+    const stat=h('div',{class:'stat'}),slot=h('div'),goBox=h('div');panel.append(stat,slot,goBox);
+    function updStat(){const l5=L.hist.slice(-5),dots=h('div',{class:'dots'});for(let i=0;i<5;i++){const v=l5[i];dots.append(h('span',{class:'dot'+(v===1?' g':v===0?' n':'')}));}stat.replaceChildren(dots,h('span',{class:'mono small'},`Level ${lvl()}/3 · ${L.cor}/${L.att}`));}
+    function nextProb(){slot.replaceChildren();const item=l.gen(lvl()),hint=h('p',{class:'hint',hidden:true},'Hint: '+l.hint);let sb;
+      const nb=h('button',{class:'btn primary',hidden:true,onclick:nextProb},'Next problem');
+      const wi=itemWidget(item,{onResult:ok=>{L.att++;if(ok)L.cor++;L.hist.push(ok?1:0);L.hist=L.hist.slice(-20);const l5=L.hist.slice(-5);if(!L.go&&L.hist.length>=5&&l5.reduce((a,b)=>a+b,0)>=4){L.go=true;showGo(true);}save();updStat();refresh();nb.hidden=false;sb.disabled=true;nb.focus({preventScroll:true});}});
+      sb=h('button',{class:'btn ghost',onclick:()=>wi.reveal()},'Show solution');
+      slot.append(wi,h('div',{class:'row'},h('button',{class:'btn ghost',onclick:()=>hint.hidden=false},'Hint'),sb,nb),hint);}
+    function showGo(fresh){goBox.replaceChildren(h('div',{class:'banner'},h('strong',{},fresh?'GO. Standard met.':'This module is at GO.'),h('span',{},' Keep running reps, or close it out with an after action review.')),aar(l));}
+    updStat();nextProb();if(L.go)showGo(false);}
+  app.append(stepper,panel);
+  const i=LESSONS.indexOf(l),pv=LESSONS[i-1],nx=LESSONS[i+1];
+  app.append(h('div',{class:'row between lnav'},pv?h('button',{class:'btn ghost',onclick:()=>go('lesson',pv.id)},'← '+pv.num):h('span'),nx?h('button',{class:'btn ghost',onclick:()=>go('lesson',nx.id)},nx.num+' →'):h('span')));
+  show(L.step||0);
+}
+function aar(l){const qs=['What was supposed to happen?','What actually happened?','Why the difference?','Sustain / improve?'],tas=qs.map(()=>h('textarea',{rows:2}));
+  const box=h('div',{class:'aar'},h('h3',{},'After action review'),qs.map((q,i)=>h('label',{class:'field'},h('span',{},q),tas[i])),h('div',{class:'row'},h('button',{class:'btn primary',onclick:()=>{if(!tas.some(t=>t.value.trim()))return;S.journal.push({id:l.id,date:new Date().toISOString(),aar:tas.map(t=>t.value)});save();box.replaceChildren(h('p',{class:'callout okc'},'AAR saved to your log.'));}},'Save AAR')));return box;}
+
+/* ===== journal ===== */
+function vJournal(app){app.append(h('h1',{class:'ph'},'Field log'),h('p',{class:'lead'},'Your reflections, connections, and after action reviews, by module.'));
+  const rows=[];LESSONS.forEach(l=>{const L=S.lessons[l.id],aars=S.journal.filter(j=>j.id===l.id);if(!((L&&(L.pp.trim()||L.dev.trim()))||aars.length))return;
+    const card=h('div',{class:'panel jcard'},h('h3',{},`${l.num} · ${l.title}`,h('span',{class:'chip course'},l.course)));
+    if(L&&L.pp.trim())card.append(h('p',{class:'jl'},'Reflection'),h('p',{class:'jt'},L.pp));
+    if(L&&L.dev.trim())card.append(h('p',{class:'jl'},'Where I’ll use it'),h('p',{class:'jt'},L.dev));
+    aars.forEach(a=>card.append(h('p',{class:'jl'},'AAR · '+new Date(a.date).toLocaleDateString()),h('ol',{class:'jt'},a.aar.map(x=>h('li',{},x||'—')))));rows.push(card);});
+  if(!rows.length){app.append(h('p',{class:'callout'},'Nothing logged yet. Your notes from the Reflect and Connect steps, plus any AARs, collect here.'),h('button',{class:'btn primary',onclick:()=>go('lesson',nextLesson().id)},'Open the next module'));return;}
+  const txt=()=>LESSONS.map(l=>{const L=S.lessons[l.id],a=S.journal.filter(j=>j.id===l.id);if(!((L&&(L.pp.trim()||L.dev.trim()))||a.length))return '';return `== ${l.num} ${l.title} (${l.course}) ==\n`+(L&&L.pp.trim()?`Reflection: ${L.pp}\n`:'')+(L&&L.dev.trim()?`Use: ${L.dev}\n`:'')+a.map(x=>`AAR ${x.date.slice(0,10)}:\n${x.aar.map((v,i)=>`  ${i+1}. ${v}`).join('\n')}\n`).join('');}).filter(Boolean).join('\n');
+  const msg=h('span',{class:'small'});app.append(h('div',{class:'row'},h('button',{class:'btn',onclick:async()=>{try{await navigator.clipboard.writeText(txt());msg.textContent='Copied.';}catch(e){const t=h('textarea',{class:'copybox',readonly:true});t.value=txt();msg.replaceWith(t);t.select();}}},'Copy log as text'),msg),rows);}
+
+/* ===== method ===== */
+function vMethod(app){app.append(h('h1',{class:'ph'},'How this works'),h('div',{class:'panel gni',html:`
+<p>Field Ops teaches the working math behind MTSU’s Commercial Construction Management concentration. Each module is tied to a real course in the degree and built on the Army Experiential Learning Model (ELM) with andragogy, GO/NO-GO standards, and after action reviews.</p>
+<h3>Modules by course</h3>
+<div class="rule"><b>CCM 2060 / CMT 2100</b> — reading scale, area and volume takeoff, 3-4-5 squaring.<br><b>CMT 3100 / CMT 4200</b> — unit-cost estimating, markup vs. margin, labor productivity.<br><b>CMT 4120</b> — activity duration, critical path and float.<br><b>CMT 3000</b> — water-cement ratio, yield, rebar, masonry coursing.<br><b>CMT 2320 / CCM 2200</b> — compaction and Proctor, OSHA trench sloping.<br><b>CMT 4320 / CMT 4280</b> — BIM and LOD, progress billing and retainage.</div>
+<h3>The five ELM steps, every module</h3>
+<div class="rule"><b>1. Run it cold.</b> A field scenario you attempt before instruction.<br><b>2. Reflect.</b> You see the answer and write what happened.<br><b>3. The method.</b> The rule, a worked example, and an interactive model to play with.<br><b>4. Connect it.</b> Where you’ll use it, in your own words.<br><b>5. Train to GO.</b> Generated problems that step up until you meet the standard.</div>
+<h3>Standard and AAR</h3>
+<p>A module is GO at 4 of your last 5, with at least 5 reps. Showing a solution counts as a NO-GO. At GO, a four-question AAR captures sustain/improve and saves to your field log. Bloom’s level is tagged on each module.</p>
+<h3>Honest note on numbers</h3>
+<p>Course numbers and sequencing follow the MTSU 2026–27 Commercial CM academic map. The engineering values (rebar weights, Proctor relationships, OSHA slope ratios, w/c behavior) are standard industry references; always verify against the current ACI, OSHA 1926 Subpart P, and project specs before using them on a real job.</p>`}),h('div',{class:'row'},h('button',{class:'btn primary',onclick:()=>go('lesson',nextLesson().id)},'Open the next module')));}
+
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.v)));
+render();
+</script></body></html>
